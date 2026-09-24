@@ -17,31 +17,29 @@ class BookTest < ActiveSupport::TestCase
     assert book.errors[:title].present?
   end
 
-  test "content_until returns full content when page limit exceeds length" do
-    # book content is short – page limit of 999 returns everything
-    result = @book.content_until(999)
-    assert_equal @book.content, result
-  end
-
-  test "content_until restricts content to released pages" do
+  test "pages splits content into chunks of lines_per_page lines" do
     book = Book.new(
       title: "Long Book",
       author: "Author",
-      content: "A" * 5000
+      lines_per_page: 2,
+      content: "Zeile 1\nZeile 2\nZeile 3\nZeile 4\nZeile 5"
     )
-    # released_until: 2 → max 2 * 500 = 1000 chars
-    result = book.content_until(2)
-    assert result.length <= 1000
-    assert result.length > 0
+    assert_equal 3, book.page_count
+    assert_equal "Zeile 1\nZeile 2", book.page(1)
+    assert_equal "Zeile 3\nZeile 4", book.page(2)
+    assert_equal "Zeile 5", book.page(3)
   end
 
-  test "content_until returns all content when content is shorter than page limit" do
-    book = Book.new(
-      title: "Short Book",
-      author: "Author",
-      content: "Short content"
-    )
-    result = book.content_until(1)
-    assert_equal "Short content", result
+  test "page returns nil for out-of-range page numbers" do
+    book = Book.new(title: "Short", author: "Author", content: "Nur eine Seite", lines_per_page: 80)
+    assert_nil book.page(0)
+    assert_nil book.page(99)
+    assert_equal "Nur eine Seite", book.page(1)
+  end
+
+  test "book invalid with lines_per_page of zero" do
+    book = Book.new(title: "T", author: "A", content: "C", lines_per_page: 0)
+    assert_not book.valid?
+    assert book.errors[:lines_per_page].present?
   end
 end

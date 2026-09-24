@@ -59,4 +59,13 @@ class ReadingAssignmentsControllerTest < ActionDispatch::IntegrationTest
     get read_reading_assignment_url(@assignment)
     assert_response :success
   end
+
+  test "cannot navigate past the released page limit or the book's actual length" do
+    sign_in_as(@student)
+    get read_reading_assignment_url(@assignment, page: 999)
+    assert_response :success
+    # Fixture book :one has no line breaks -> exactly 1 page, even though
+    # released_until (20) would theoretically allow more.
+    assert_includes response.body, "Seite 1 von 1"
+  end
 end

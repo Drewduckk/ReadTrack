@@ -6,20 +6,23 @@ class Book < ApplicationRecord
   validates :title, presence: true
   validates :author, presence: true
   validates :content, presence: true
+  validates :lines_per_page, numericality: { only_integer: true, greater_than: 0 }
 
-  # Returns only the portion of content up to the given page number.
-  # Assumes approximately CHARS_PER_PAGE characters per page.
-  CHARS_PER_PAGE = 500
+  # Teilt den Buchtext in echte Seiten auf (je lines_per_page Zeilen).
+  # Wird gecached, da der Text sich waehrend eines Requests nicht aendert.
+  def pages
+    @pages ||= content.to_s.split("\n", -1).each_slice(lines_per_page).map { |lines| lines.join("\n") }
+  end
 
-  def content_until(page)
-    return content if page.nil? || content.blank?
+  def page_count
+    pages.size
+  end
 
-    char_limit = page * CHARS_PER_PAGE
-    return content if content.length <= char_limit
+  # Text einer einzelnen Seite (1-indiziert). Ausserhalb des gueltigen
+  # Bereichs wird nil zurueckgegeben, statt einen Fehler zu werfen.
+  def page(number)
+    return nil if number.nil? || number < 1
 
-    # Truncate at char_limit but cut cleanly at a word boundary
-    truncated = content[0, char_limit]
-    last_space = truncated.rindex(/\s/)
-    last_space ? truncated[0, last_space] : truncated
+    pages[number - 1]
   end
 end

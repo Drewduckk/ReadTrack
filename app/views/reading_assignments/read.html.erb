@@ -29,18 +29,28 @@
 </div>
 
 <div class="card shadow-sm mb-4">
-  <div class="card-header bg-light">
-    <h5 class="mb-0">Lesetext (Freigegeben bis Seite <%= @reading_assignment.released_until %>)</h5>
+  <div class="card-header bg-light d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Seite <%= @current_page %> von <%= @book.page_count %></h5>
+    <span class="text-muted small">Freigegeben bis Seite <%= @max_visible_page %></span>
   </div>
   <div class="card-body p-4">
-    <div class="reading-text p-3 bg-white rounded border" style="font-size: 1.15rem; line-height: 1.8; white-space: pre-wrap;">
-<%= @book.content_until(@reading_assignment.released_until) %>
+    <div class="reading-text p-3 bg-white rounded border" style="font-size: 1.15rem; line-height: 1.8; white-space: pre-wrap; min-height: 200px;">
+<%= @book.page(@current_page) || "Für diesen Leseauftrag ist noch keine Seite freigegeben." %>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between align-items-center">
-    <span class="text-muted">Ende des freigegebenen Bereichs (Seite <%= @reading_assignment.released_until %>)</span>
-    <% if current_user.student? %>
-      <%= link_to "Jetzt Zusammenfassung erfassen &rarr;".html_safe, new_reading_assignment_summary_path(@reading_assignment), class: "btn btn-success" %>
+    <% if @current_page > 1 %>
+      <%= link_to "&larr; Vorherige Seite".html_safe, read_reading_assignment_path(@reading_assignment, page: @current_page - 1), class: "btn btn-outline-secondary" %>
+    <% else %>
+      <span></span>
+    <% end %>
+
+    <% if @current_page < @max_visible_page %>
+      <%= link_to "Nächste Seite &rarr;".html_safe, read_reading_assignment_path(@reading_assignment, page: @current_page + 1), class: "btn btn-outline-primary" %>
+    <% elsif @max_visible_page < @book.page_count %>
+      <span class="text-muted small">Ab hier noch nicht freigegeben (Buch hat <%= @book.page_count %> Seiten)</span>
+    <% else %>
+      <span class="text-muted small">Letzte freigegebene Seite erreicht</span>
     <% end %>
   </div>
 </div>

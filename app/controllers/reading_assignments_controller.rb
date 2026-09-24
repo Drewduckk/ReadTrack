@@ -17,6 +17,13 @@ class ReadingAssignmentsController < ApplicationController
   def read
     authorize @reading_assignment, :read?
     @book = @reading_assignment.book
+
+    max_visible_page = [@reading_assignment.released_until, @book.page_count].min
+    requested_page = params[:page].to_i
+    requested_page = 1 if requested_page < 1
+    @current_page = [requested_page, max_visible_page].min
+    @max_visible_page = max_visible_page
+
     @my_progress = current_user.reading_progresses.find_or_initialize_by(reading_assignment: @reading_assignment) if current_user.student?
     @my_summaries = @reading_assignment.summaries.where(student: current_user) if current_user.student?
   end

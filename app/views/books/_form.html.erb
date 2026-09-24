@@ -26,6 +26,12 @@
     <div class="form-text">Schüler können diesen Text online bis zum jeweils von der Lehrperson freigegebenen Bereich lesen.</div>
   </div>
 
+  <div class="mb-3" style="max-width: 220px;">
+    <%= f.label :lines_per_page, "Zeilen pro Seite", class: "form-label" %>
+    <%= f.number_field :lines_per_page, min: 1, value: book.lines_per_page || 80, class: "form-control" %>
+    <div class="form-text">Bestimmt, wie der Text in Seiten aufgeteilt wird (z.B. 80 Zeilen ≈ eine Bildschirmseite).</div>
+  </div>
+
   <div class="d-flex gap-2">
     <%= f.submit class: "btn btn-primary" %>
     <%= link_to "Abbrechen", books_path, class: "btn btn-outline-secondary" %>
