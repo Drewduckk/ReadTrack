@@ -1,0 +1,13 @@
+one:
+  student: student_one
+  reading_assignment: one
+  page_from: 1
+  page_to: 15
+  content: "Zusammenfassung der ersten 15 Seiten durch Max."
+
+two:
+  student: student_two
+  reading_assignment: one
+  page_from: 1
+  page_to: 10
+  content: "Zusammenfassung bis Seite 10 durch Anna."

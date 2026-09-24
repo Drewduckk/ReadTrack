@@ -1,0 +1,53 @@
+<div class="rt-page-narrow">
+  <div class="rt-page-header text-center">
+    <h1>Create your account</h1>
+    <p>Set up your ReadTrack account to get started.</p>
+  </div>
+  <div class="rt-card">
+    <div class="rt-card-body">
+      <% if @user.errors.any? %>
+        <div class="rt-errors">
+          <p><%= pluralize(@user.errors.count, "error") %> prevented registration.</p>
+          <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= form_with model: @user, url: signup_path do |form| %>
+        <div class="rt-form-group">
+          <%= form.label :name, class: "form-label" %>
+          <%= form.text_field :name, class: "form-control", autocomplete: "name", autofocus: true %>
+        </div>
+        <div class="rt-form-group">
+          <%= form.label :email_address, class: "form-label" %>
+          <%= form.email_field :email_address, class: "form-control", autocomplete: "email" %>
+        </div>
+        <div class="rt-form-group">
+          <%= form.label :role, "Rolle", class: "form-label" %>
+          <%= form.select :role,
+              [["Schüler/in (Student)", "student"], ["Lehrperson (Teacher)", "teacher"]],
+              {},
+              class: "form-select" %>
+          <div class="rt-help">Wähle deine Rolle im System aus.</div>
+        </div>
+        <div class="rt-form-group">
+          <%= form.label :password, class: "form-label" %>
+          <%= form.password_field :password, class: "form-control", autocomplete: "new-password" %>
+          <div class="rt-help">Use at least 12 characters.</div>
+        </div>
+        <div class="rt-form-group">
+          <%= form.label :password_confirmation, class: "form-label" %>
+          <%= form.password_field :password_confirmation, class: "form-control", autocomplete: "new-password" %>
+        </div>
+        <div class="d-grid">
+          <%= form.submit "Create account", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+      <p class="rt-auth-footer mb-0">Already have an account? <%= link_to "Sign in", new_session_path %></p>
+    </div>
+  </div>
+</div>
+

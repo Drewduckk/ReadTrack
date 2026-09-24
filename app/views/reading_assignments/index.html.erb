@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Leseaufträge</h2>
+  <% if policy(ReadingAssignment).create? %>
+    <%= link_to "+ Neuer Leseauftrag", new_reading_assignment_path, class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<div class="row g-4">
+  <% @reading_assignments.each do |assignment| %>
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="card-title"><%= assignment.book.title %></h5>
+            <span class="badge bg-primary">Bis Seite <%= assignment.released_until %></span>
+          </div>
+          <p class="card-text text-muted mb-2">
+            Autor: <%= assignment.book.author %><br>
+            Lehrperson: <%= assignment.teacher.name %>
+          </p>
+          <div class="d-flex gap-2 mt-3">
+            <% if current_user.student? %>
+              <%= link_to "Online lesen", read_reading_assignment_path(assignment), class: "btn btn-primary btn-sm" %>
+              <%= link_to "Zusammenfassung schreiben", new_reading_assignment_summary_path(assignment), class: "btn btn-outline-success btn-sm" %>
+            <% else %>
+              <%= link_to "Klassenübersicht", reading_assignment_path(assignment), class: "btn btn-outline-primary btn-sm" %>
+              <% if policy(assignment).edit? %>
+                <%= link_to "Bearbeiten", edit_reading_assignment_path(assignment), class: "btn btn-outline-secondary btn-sm" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

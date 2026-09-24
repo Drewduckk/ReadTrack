@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <%= link_to "&larr; Zurück zum Auftrag".html_safe, reading_assignment_path(@reading_assignment), class: "text-decoration-none" %>
+    <h2 class="mt-2 mb-0"><%= @reading_assignment.book.title %></h2>
+    <span class="text-muted">Autor: <%= @reading_assignment.book.author %></span>
+  </div>
+  <div class="d-flex gap-2">
+    <% if current_user.student? %>
+      <%= link_to "Zusammenfassung schreiben", new_reading_assignment_summary_path(@reading_assignment), class: "btn btn-success" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="alert alert-info d-flex justify-content-between align-items-center">
+  <div>
+    <strong>Leseabschnitt:</strong> Dieser Text ist von der Lehrperson (<%= @reading_assignment.teacher.name %>) 
+    <strong>bis Seite <%= @reading_assignment.released_until %></strong> freigegeben.
+  </div>
+
+  <% if current_user.student? %>
+    <div>
+      <%= form_with(model: [@reading_assignment, @my_progress], url: reading_assignment_reading_progress_path(@reading_assignment), method: :post, class: "d-flex align-items-center gap-2") do |f| %>
+        <%= f.label :current_page, "Mein Lesestand (Seite):", class: "mb-0 small text-nowrap fw-bold" %>
+        <%= f.number_field :current_page, value: @my_progress.current_page, min: 0, max: @reading_assignment.released_until, class: "form-control form-control-sm", style: "width: 80px;" %>
+        <%= f.submit "Stand speichern", class: "btn btn-sm btn-outline-primary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-light">
+    <h5 class="mb-0">Lesetext (Freigegeben bis Seite <%= @reading_assignment.released_until %>)</h5>
+  </div>
+  <div class="card-body p-4">
+    <div class="reading-text p-3 bg-white rounded border" style="font-size: 1.15rem; line-height: 1.8; white-space: pre-wrap;">
+<%= @book.content_until(@reading_assignment.released_until) %>
+    </div>
+  </div>
+  <div class="card-footer d-flex justify-content-between align-items-center">
+    <span class="text-muted">Ende des freigegebenen Bereichs (Seite <%= @reading_assignment.released_until %>)</span>
+    <% if current_user.student? %>
+      <%= link_to "Jetzt Zusammenfassung erfassen &rarr;".html_safe, new_reading_assignment_summary_path(@reading_assignment), class: "btn btn-success" %>
+    <% end %>
+  </div>
+</div>

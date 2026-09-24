@@ -1,0 +1,42 @@
+<%= form_with(model: [reading_assignment, summary].compact, class: "needs-validation") do |f| %>
+  <% if summary.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h6 class="alert-heading fw-bold"><%= pluralize(summary.errors.count, "Fehler") %> verhindert(en) das Speichern:</h6>
+      <ul class="mb-0">
+        <% summary.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% assignment = reading_assignment || summary.reading_assignment %>
+  <% if assignment %>
+    <div class="alert alert-info">
+      <strong>Hinweis zur Freigabe:</strong> Die Lehrperson hat den Lesestoff <strong>bis Seite <%= assignment.released_until %></strong> freigegeben. Zusammenfassungen dürfen nicht über diesen Bereich hinausgehen.
+    </div>
+  <% end %>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <%= f.label :page_from, "Seite von", class: "form-label" %>
+      <%= f.number_field :page_from, min: 1, max: assignment&.released_until, class: "form-control", required: true %>
+    </div>
+    <div class="col-md-6">
+      <%= f.label :page_to, "Seite bis", class: "form-label" %>
+      <%= f.number_field :page_to, min: 1, max: assignment&.released_until, class: "form-control", required: true %>
+      <div class="form-text">Maximal Seite <%= assignment&.released_until %>.</div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :content, "Deine Zusammenfassung", class: "form-label" %>
+    <%= f.text_area :content, rows: 8, class: "form-control", required: true, placeholder: "Fasse hier den Inhalt des gelesenen Abschnitts in deinen eigenen Worten zusammen..." %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= f.submit "Zusammenfassung speichern", class: "btn btn-primary" %>
+    <% cancel_path = assignment ? reading_assignment_path(assignment) : dashboard_path %>
+    <%= link_to "Abbrechen", cancel_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

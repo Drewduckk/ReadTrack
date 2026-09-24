@@ -1,0 +1,9 @@
+one:
+  student: student_one
+  reading_assignment: one
+  current_page: 15
+
+two:
+  student: student_two
+  reading_assignment: one
+  current_page: 10

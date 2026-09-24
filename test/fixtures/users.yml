@@ -1,0 +1,41 @@
+teacher:
+  name: "Frau Meyer"
+  email_address: "teacher@example.com"
+  password_digest: <%= BCrypt::Password.create('password123456', cost: 4) %>
+  role: 1
+
+other_teacher:
+  name: "Herr Schmidt"
+  email_address: "other_teacher@example.com"
+  password_digest: <%= BCrypt::Password.create('password123456', cost: 4) %>
+  role: 1
+
+student_one:
+  name: "Max Muster"
+  email_address: "student1@example.com"
+  password_digest: <%= BCrypt::Password.create('password123456', cost: 4) %>
+  role: 0
+
+student_two:
+  name: "Anna Beispiel"
+  email_address: "student2@example.com"
+  password_digest: <%= BCrypt::Password.create('password123456', cost: 4) %>
+  role: 0
+
+admin:
+  name: "Admin User"
+  email_address: "admin@example.com"
+  password_digest: <%= BCrypt::Password.create('password123456', cost: 4) %>
+  role: 2
+
+one:
+  name: "Default User One"
+  email_address: "one@example.com"
+  password_digest: <%= BCrypt::Password.create('password123456', cost: 4) %>
+  role: 0
+
+two:
+  name: "Default User Two"
+  email_address: "two@example.com"
+  password_digest: <%= BCrypt::Password.create('password123456', cost: 4) %>
+  role: 0

@@ -1,0 +1,64 @@
+<div class="card shadow-sm mt-4">
+  <div class="card-header bg-light d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Aktivitätsprotokoll & Feed</h5>
+    <span class="badge bg-secondary"><%= @recent_activities&.count || 0 %> Einträge</span>
+  </div>
+  <div class="card-body p-0">
+    <% if @recent_activities.present? %>
+      <div class="list-group list-group-flush">
+        <% @recent_activities.each do |version| %>
+          <% user = User.find_by(id: version.whodunnit) %>
+          <div class="list-group-item d-flex justify-content-between align-items-center py-2">
+            <div>
+              <span class="badge <%= version.event == 'create' ? 'bg-success' : (version.event == 'update' ? 'bg-primary' : 'bg-danger') %> me-2">
+                <%= version.event.upcase %>
+              </span>
+              <strong><%= user ? "#{user.name} (#{user.role})" : "Benutzer ##{version.whodunnit || '?'}" %>:</strong>
+              
+              <% case version.item_type %>
+              <% when "ReadingAssignment" %>
+                <% if version.event == "create" %>
+                  Neuer Leseauftrag erstellt (Auftrag #<%= version.item_id %>)
+                <% elsif version.event == "update" && version.changeset["released_until"].present? %>
+                  Freigabebereich geändert: Seite <%= version.changeset["released_until"][0] %> &rarr; <strong>Seite <%= version.changeset["released_until"][1] %></strong>
+                <% else %>
+                  Leseauftrag #<%= version.item_id %> aktualisiert
+                <% end %>
+
+              <% when "Summary" %>
+                <% if version.event == "create" %>
+                  Zusammenfassung erstellt für 
+                  <% if version.changeset["page_from"] && version.changeset["page_to"] %>
+                    Seiten <%= version.changeset["page_from"][1] %>–<%= version.changeset["page_to"][1] %>
+                  <% else %>
+                    Abschnitt (Eintrag #<%= version.item_id %>)
+                  <% end %>
+                <% else %>
+                  Zusammenfassung #<%= version.item_id %> aktualisiert
+                <% end %>
+
+              <% when "ReadingProgress" %>
+                Lesefortschritt aktualisiert auf 
+                <% if version.changeset["current_page"].present? %>
+                  <strong>Seite <%= version.changeset["current_page"][1] %></strong>
+                <% else %>
+                  neuen Stand
+                <% end %>
+
+              <% when "Book" %>
+                Buch <%= version.event == "create" ? "erstellt" : "bearbeitet" %>:
+                <%= version.changeset["title"]&.last || "Buch ##{version.item_id}" %>
+
+              <% else %>
+                <%= version.item_type %> #<%= version.item_id %> (<%= version.event %>)
+              <% end %>
+            </div>
+            <small class="text-muted"><%= time_ago_in_words(version.created_at) %> her</small>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="p-3 text-muted">Noch keine Aktivitäten aufgezeichnet.</div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+one:
+  book: one
+  teacher: teacher
+  released_until: 20
+
+two:
+  book: two
+  teacher: other_teacher
+  released_until: 10

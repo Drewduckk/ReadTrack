@@ -1,0 +1,194 @@
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="p-4 bg-light rounded-3 border">
+      <h2>Willkommen bei ReadTogether, <%= current_user.name %>!</h2>
+      <p class="lead mb-0">Rolle: <span class="badge bg-primary"><%= current_user.role.capitalize %></span></p>
+    </div>
+  </div>
+</div>
+
+<% if current_user.teacher? %>
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Meine Klassen & Leseaufträge</h4>
+          <%= link_to "+ Neuer Leseauftrag", new_reading_assignment_path, class: "btn btn-sm btn-primary" %>
+        </div>
+        <div class="card-body">
+          <% if @reading_assignments.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Buch</th>
+                    <th>Freigegeben bis</th>
+                    <th>Zusammenfassungen</th>
+                    <th>Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @reading_assignments.each do |assignment| %>
+                    <tr>
+                      <td><strong><%= assignment.book.title %></strong><br><small class="text-muted"><%= assignment.book.author %></small></td>
+                      <td><span class="badge bg-info text-dark fs-6">Seite <%= assignment.released_until %></span></td>
+                      <td><%= assignment.summaries.count %></td>
+                      <td>
+                        <%= link_to "Klassenübersicht", reading_assignment_path(assignment), class: "btn btn-sm btn-outline-primary" %>
+                        <%= link_to "Bearbeiten", edit_reading_assignment_path(assignment), class: "btn btn-sm btn-outline-secondary" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Noch keine Leseaufträge erstellt. Klicken Sie auf "+ Neuer Leseauftrag".</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Bücher / Geschichten</h5>
+          <%= link_to "+ Neu", new_book_path, class: "btn btn-sm btn-outline-primary" %>
+        </div>
+        <div class="card-body">
+          <% if @books.any? %>
+            <ul class="list-group list-group-flush">
+              <% @books.each do |book| %>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <div>
+                    <strong><%= book.title %></strong><br>
+                    <small class="text-muted"><%= book.author %></small>
+                  </div>
+                  <%= link_to "Anzeigen", book_path(book), class: "btn btn-sm btn-outline-secondary" %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-muted mb-0">Noch keine Bücher vorhanden.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% elsif current_user.student? %>
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header">
+          <h4 class="mb-0">Meine Leseaufträge & Bücher</h4>
+        </div>
+        <div class="card-body">
+          <% if @reading_assignments.any? %>
+            <div class="row g-3">
+              <% @reading_assignments.each do |assignment| %>
+                <% progress = @my_progresses[assignment.id] %>
+                <div class="col-12">
+                  <div class="card border">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                          <h5 class="card-title mb-1"><%= assignment.book.title %></h5>
+                          <h6 class="card-subtitle text-muted">Autor: <%= assignment.book.author %> | Lehrperson: <%= assignment.teacher.name %></h6>
+                        </div>
+                        <span class="badge bg-success fs-6">Freigegeben bis Seite <%= assignment.released_until %></span>
+                      </div>
+                      <p class="mb-3">
+                        <strong>Mein aktueller Lesestand:</strong>
+                        <% if progress %>
+                          <span class="badge bg-secondary">Seite <%= progress.current_page %></span>
+                        <% else %>
+                          <span class="text-muted">Noch nicht begonnen</span>
+                        <% end %>
+                      </p>
+                      <div class="d-flex gap-2">
+                        <%= link_to "Online lesen", read_reading_assignment_path(assignment), class: "btn btn-primary" %>
+                        <%= link_to "Zusammenfassung schreiben", new_reading_assignment_summary_path(assignment), class: "btn btn-outline-success" %>
+                        <%= link_to "Details", reading_assignment_path(assignment), class: "btn btn-outline-secondary" %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Es liegen aktuell keine Leseaufträge vor.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h5 class="mb-0">Meine erstellten Zusammenfassungen</h5>
+        </div>
+        <div class="card-body">
+          <% if @my_summaries.any? %>
+            <div class="list-group">
+              <% @my_summaries.each do |summary| %>
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6><%= summary.reading_assignment.book.title %> (Seiten <%= summary.page_from %>–<%= summary.page_to %>)</h6>
+                    <p class="text-muted mb-0 small"><%= truncate(summary.content, length: 100) %></p>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <%= link_to "Ansehen", summary_path(summary), class: "btn btn-sm btn-outline-primary" %>
+                    <%= link_to "Bearbeiten", edit_summary_path(summary), class: "btn btn-sm btn-outline-secondary" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Du hast noch keine Zusammenfassungen geschrieben.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <%= render "shared/activity_feed" %>
+    </div>
+  </div>
+
+<% else %>
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Admin Übersicht</h4>
+          <div class="d-flex gap-2">
+            <%= link_to "Benutzerverwaltung", admin_users_path, class: "btn btn-primary btn-sm" %>
+            <%= link_to "+ Buch", new_book_path, class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "+ Leseauftrag", new_reading_assignment_path, class: "btn btn-outline-secondary btn-sm" %>
+          </div>
+        </div>
+        <div class="card-body">
+          <h5>Alle Leseaufträge (<%= @reading_assignments.count %>)</h5>
+          <ul class="list-group list-group-flush mb-4">
+            <% @reading_assignments.each do |ra| %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span><%= ra.book.title %> (Lehrperson: <%= ra.teacher.name %>) - Freigegeben bis Seite <%= ra.released_until %></span>
+                <%= link_to "Öffnen", reading_assignment_path(ra), class: "btn btn-sm btn-outline-secondary" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <%= render "shared/activity_feed" %>
+    </div>
+  </div>
+<% end %>
+
+<% if current_user.teacher? %>
+  <div class="row">
+    <div class="col-12">
+      <%= render "shared/activity_feed" %>
+    </div>
+  </div>
+<% end %>
