@@ -7,8 +7,8 @@
 | **Modul** | ICT Modul 223 – Multiuser-Applikationen objektorientiert realisieren |
 | **Projekt** | ReadTrack |
 | **Datum** | 24.09.2026 |
-| **Autor** | [Vorname Nachname eintragen] |
-| **Schulklasse** | [Schulklasse eintragen] |
+| **Autor** | Andras Fodor |
+| **Schulklasse** | 24-223-E |
 
 ---
 
@@ -336,11 +336,11 @@ Die aktuelle Anwendung verwendet Bootstrap für ein einheitliches, responsives L
 
 ## Login
 
-![alt text](image.png)
+![alt text](image-1.png)
 
 ## Dashboard – Schüler
 
-![alt text](image-1.png)
+![alt text](image.png)
 
 ---
 

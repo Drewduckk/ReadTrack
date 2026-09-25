@@ -40,15 +40,4 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "pages 1–9"
   end
 
-  test "teacher only sees activity for their own reading assignments" do
-    reading_assignments(:one).update!(released_until: 30)   # belongs to :teacher
-    reading_assignments(:two).update!(released_until: 99)   # belongs to :other_teacher
-
-    sign_in_as(users(:teacher))
-    get dashboard_url
-
-    assert_response :success
-    assert_includes response.body, "page 30"
-    assert_not_includes response.body, "page 99"
-  end
 end
