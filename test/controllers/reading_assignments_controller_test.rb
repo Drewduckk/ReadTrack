@@ -66,6 +66,6 @@ class ReadingAssignmentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     # Fixture book :one has no line breaks -> exactly 1 page, even though
     # released_until (20) would theoretically allow more.
-    assert_includes response.body, "Seite 1 von 1"
+    assert_includes response.body, "Page 1 of 1"
   end
 end

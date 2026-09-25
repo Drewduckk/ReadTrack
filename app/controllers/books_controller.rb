@@ -21,7 +21,7 @@ class BooksController < ApplicationController
     authorize @book
 
     if @book.save
-      redirect_to @book, notice: "Buch wurde erfolgreich erstellt."
+      redirect_to @book, notice: "Book was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class BooksController < ApplicationController
     authorize @book
 
     if @book.update(book_params)
-      redirect_to @book, notice: "Buch wurde erfolgreich aktualisiert."
+      redirect_to @book, notice: "Book was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -44,7 +44,7 @@ class BooksController < ApplicationController
   def destroy
     authorize @book
     @book.destroy
-    redirect_to books_path, notice: "Buch wurde gelöscht."
+    redirect_to books_path, notice: "Book was deleted."
   end
 
   private

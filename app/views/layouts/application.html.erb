@@ -17,8 +17,8 @@
   <div class="d-flex align-items-center gap-3">
     <% if current_user %>
       <%= link_to "Dashboard", dashboard_path, class: "rt-nav-link" %>
-      <%= link_to "Bücher", books_path, class: "rt-nav-link" %>
-      <%= link_to "Leseaufträge", reading_assignments_path, class: "rt-nav-link" %>
+      <%= link_to "Books", books_path, class: "rt-nav-link" %>
+      <%= link_to "Reading Assignments", reading_assignments_path, class: "rt-nav-link" %>
       <%= link_to "Profile", profile_path, class: "rt-nav-link" %>
       <% if current_user.admin? %><%= link_to "Users", admin_users_path, class: "rt-nav-link" %><% end %>
       <%= button_to "Log out", session_path, method: :delete, class: "btn btn-sm btn-outline-secondary" %>

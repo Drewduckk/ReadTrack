@@ -23,10 +23,10 @@ class ReadingProgressesController < ApplicationController
 
     if @progress.save
       redirect_back fallback_location: read_reading_assignment_path(@reading_assignment),
-                    notice: "Lesefortschritt gespeichert: Seite #{@progress.current_page}."
+                    notice: "Reading progress saved: page #{@progress.current_page}."
     else
       redirect_back fallback_location: read_reading_assignment_path(@reading_assignment),
-                    alert: "Fehler beim Speichern des Lesefortschritts: #{@progress.errors.full_messages.to_sentence}"
+                    alert: "Error saving reading progress: #{@progress.errors.full_messages.to_sentence}"
     end
   end
 end

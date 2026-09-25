@@ -17,7 +17,7 @@ class Summary < ApplicationRecord
     return unless page_from.present? && page_to.present?
 
     if page_to < page_from
-      errors.add(:page_to, "muss grösser oder gleich 'Seite von' sein")
+      errors.add(:page_to, "must be greater than or equal to 'page from'")
     end
   end
 
@@ -25,7 +25,7 @@ class Summary < ApplicationRecord
     return unless reading_assignment && page_to.present?
 
     if page_to > reading_assignment.released_until
-      errors.add(:page_to, "kann nicht über den freigegebenen Bereich (bis Seite #{reading_assignment.released_until}) hinausgehen")
+      errors.add(:page_to, "cannot exceed the released range (up to page #{reading_assignment.released_until})")
     end
   end
 end

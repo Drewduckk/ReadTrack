@@ -1,19 +1,19 @@
 <div class="mb-4">
-  <%= link_to "&larr; Zurück zur Übersicht".html_safe, reading_assignments_path, class: "text-decoration-none" %>
+  <%= link_to "&larr; Back to overview".html_safe, reading_assignments_path, class: "text-decoration-none" %>
 </div>
 
 <div class="card shadow-sm mb-4">
   <div class="card-header bg-light d-flex justify-content-between align-items-center">
     <div>
       <h3 class="mb-0"><%= @reading_assignment.book.title %></h3>
-      <span class="text-muted">Autor: <%= @reading_assignment.book.author %> | Lehrperson: <%= @reading_assignment.teacher.name %></span>
+      <span class="text-muted">Author: <%= @reading_assignment.book.author %> | Teacher: <%= @reading_assignment.teacher.name %></span>
     </div>
     <div class="d-flex gap-2">
       <% if current_user.student? %>
-        <%= link_to "Online lesen", read_reading_assignment_path(@reading_assignment), class: "btn btn-primary" %>
-        <%= link_to "+ Zusammenfassung schreiben", new_reading_assignment_summary_path(@reading_assignment), class: "btn btn-success" %>
+        <%= link_to "Read online", read_reading_assignment_path(@reading_assignment), class: "btn btn-primary" %>
+        <%= link_to "+ Write summary", new_reading_assignment_summary_path(@reading_assignment), class: "btn btn-success" %>
       <% elsif policy(@reading_assignment).edit? %>
-        <%= link_to "Leseauftrag bearbeiten", edit_reading_assignment_path(@reading_assignment), class: "btn btn-outline-secondary" %>
+        <%= link_to "Edit reading assignment", edit_reading_assignment_path(@reading_assignment), class: "btn btn-outline-secondary" %>
       <% end %>
     </div>
   </div>
@@ -21,15 +21,15 @@
   <div class="card-body">
     <div class="row align-items-center mb-3">
       <div class="col-md-6">
-        <h4>Freigegebener Bereich: <span class="badge bg-primary fs-5">Bis Seite <%= @reading_assignment.released_until %></span></h4>
-        <p class="text-muted mb-0">Schüler dürfen den Inhalt bis zu dieser Seitenzahl online lesen und zusammenfassen.</p>
+        <h4>Released range: <span class="badge bg-primary fs-5">Up to page <%= @reading_assignment.released_until %></span></h4>
+        <p class="text-muted mb-0">Students may read and summarize the content up to this page.</p>
       </div>
       <% if policy(@reading_assignment).update? %>
         <div class="col-md-6 border-start ps-4">
-          <label class="form-label fw-bold">Freigabebereich erweitern / anpassen:</label>
+          <label class="form-label fw-bold">Expand / adjust released range:</label>
           <%= form_with(model: @reading_assignment, method: :patch, class: "d-flex gap-2") do |f| %>
             <%= f.number_field :released_until, min: 1, class: "form-control w-50", required: true %>
-            <%= f.submit "Freigabe aktualisieren", class: "btn btn-outline-primary" %>
+            <%= f.submit "Update release", class: "btn btn-outline-primary" %>
           <% end %>
         </div>
       <% end %>
@@ -42,7 +42,7 @@
     <div class="col-md-6 mb-4">
       <div class="card shadow-sm h-100">
         <div class="card-header">
-          <h5 class="mb-0">Lesefortschritt der Schüler</h5>
+          <h5 class="mb-0">Students' Reading Progress</h5>
         </div>
         <div class="card-body">
           <% if @reading_progresses.any? %>
@@ -50,8 +50,8 @@
               <table class="table table-hover align-middle">
                 <thead>
                   <tr>
-                    <th>Schüler/in</th>
-                    <th>Aktueller Lesestand</th>
+                    <th>Student</th>
+                    <th>Current progress</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -59,12 +59,12 @@
                   <% @reading_progresses.each do |prog| %>
                     <tr>
                       <td><%= prog.student.name %></td>
-                      <td><strong>Seite <%= prog.current_page %></strong></td>
+                      <td><strong>Page <%= prog.current_page %></strong></td>
                       <td>
                         <% if prog.current_page >= @reading_assignment.released_until %>
-                          <span class="badge bg-success">Vollständig freigegeben gelesen</span>
+                          <span class="badge bg-success">Fully read up to release</span>
                         <% else %>
-                          <span class="badge bg-warning text-dark">Liest Seite <%= prog.current_page %></span>
+                          <span class="badge bg-warning text-dark">Reading page <%= prog.current_page %></span>
                         <% end %>
                       </td>
                     </tr>
@@ -73,7 +73,7 @@
               </table>
             </div>
           <% else %>
-            <p class="text-muted mb-0">Noch keine Lesefortschritte von Schülern erfasst.</p>
+            <p class="text-muted mb-0">No reading progress recorded by students yet.</p>
           <% end %>
         </div>
       </div>
@@ -82,7 +82,7 @@
     <div class="col-md-6 mb-4">
       <div class="card shadow-sm h-100">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Eingereichte Zusammenfassungen (<%= @summaries.count %>)</h5>
+          <h5 class="mb-0">Submitted Summaries (<%= @summaries.count %>)</h5>
         </div>
         <div class="card-body">
           <% if @summaries.any? %>
@@ -91,17 +91,17 @@
                 <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
                   <div>
                     <div class="d-flex w-100 justify-content-between">
-                      <h6 class="mb-1"><%= summary.student.name %>: Seiten <%= summary.page_from %>–<%= summary.page_to %></h6>
+                      <h6 class="mb-1"><%= summary.student.name %>: pages <%= summary.page_from %>–<%= summary.page_to %></h6>
                     </div>
                     <p class="mb-1 text-muted small"><%= truncate(summary.content, length: 120) %></p>
                     <small class="text-muted"><%= l(summary.created_at, format: :short) rescue summary.created_at.strftime("%d.%m.%Y %H:%M") %></small>
                   </div>
-                  <%= link_to "Ansehen", summary_path(summary), class: "btn btn-sm btn-outline-primary ms-3" %>
+                  <%= link_to "View", summary_path(summary), class: "btn btn-sm btn-outline-primary ms-3" %>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <p class="text-muted mb-0">Es wurden noch keine Zusammenfassungen eingereicht.</p>
+            <p class="text-muted mb-0">No summaries have been submitted yet.</p>
           <% end %>
         </div>
       </div>
@@ -110,7 +110,7 @@
 <% else %>
   <div class="card shadow-sm">
     <div class="card-header">
-      <h5 class="mb-0">Meine Zusammenfassungen zu diesem Buch</h5>
+      <h5 class="mb-0">My Summaries for This Book</h5>
     </div>
     <div class="card-body">
       <% my_sums = @summaries.where(student: current_user) %>
@@ -119,18 +119,18 @@
           <% my_sums.each do |summary| %>
             <div class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <strong>Seiten <%= summary.page_from %>–<%= summary.page_to %>:</strong>
+                <strong>Pages <%= summary.page_from %>–<%= summary.page_to %>:</strong>
                 <p class="text-muted mb-0 small"><%= truncate(summary.content, length: 140) %></p>
               </div>
               <div class="d-flex gap-2">
-                <%= link_to "Ansehen", summary_path(summary), class: "btn btn-sm btn-outline-primary" %>
-                <%= link_to "Bearbeiten", edit_summary_path(summary), class: "btn btn-sm btn-outline-secondary" %>
+                <%= link_to "View", summary_path(summary), class: "btn btn-sm btn-outline-primary" %>
+                <%= link_to "Edit", edit_summary_path(summary), class: "btn btn-sm btn-outline-secondary" %>
               </div>
             </div>
           <% end %>
         </div>
       <% else %>
-        <p class="text-muted mb-0">Du hast zu diesem Leseauftrag noch keine Zusammenfassung verfasst.</p>
+        <p class="text-muted mb-0">You haven't written a summary for this reading assignment yet.</p>
       <% end %>
     </div>
   </div>

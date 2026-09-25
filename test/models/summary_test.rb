@@ -27,7 +27,7 @@ class SummaryTest < ActiveSupport::TestCase
       content: "Ich habe zu weit gelesen."
     )
     assert_not summary.valid?
-    assert_includes summary.errors[:page_to].to_sentence, "kann nicht über den freigegebenen Bereich"
+    assert_includes summary.errors[:page_to].to_sentence, "cannot exceed the released range"
   end
 
   test "summary with page_to smaller than page_from is invalid" do
@@ -39,7 +39,7 @@ class SummaryTest < ActiveSupport::TestCase
       content: "Ungueltige Reihenfolge."
     )
     assert_not summary.valid?
-    assert_includes summary.errors[:page_to].to_sentence, "grösser oder gleich 'Seite von'"
+    assert_includes summary.errors[:page_to].to_sentence, "greater than or equal to 'page from'"
   end
 
   test "summary with page_from less than 1 is invalid" do

@@ -2,8 +2,8 @@
   <div class="col-md-8">
     <div class="card shadow-sm">
       <div class="card-header bg-light">
-        <h3 class="mb-0">Neue Zusammenfassung schreiben</h3>
-        <span class="text-muted"><%= @reading_assignment.book.title %> (Autor: <%= @reading_assignment.book.author %>)</span>
+        <h3 class="mb-0">Write new summary</h3>
+        <span class="text-muted"><%= @reading_assignment.book.title %> (Author: <%= @reading_assignment.book.author %>)</span>
       </div>
       <div class="card-body">
         <%= render "form", reading_assignment: @reading_assignment, summary: @summary %>

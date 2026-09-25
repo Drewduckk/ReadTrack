@@ -29,7 +29,7 @@ class SummariesController < ApplicationController
     Summary.transaction do
       @reading_assignment.lock!
       if @summary.save
-        redirect_to @summary, notice: "Zusammenfassung erfolgreich gespeichert."
+        redirect_to @summary, notice: "Summary successfully saved."
       else
         render :new, status: :unprocessable_entity
       end
@@ -46,7 +46,7 @@ class SummariesController < ApplicationController
     Summary.transaction do
       @summary.reading_assignment.lock!
       if @summary.update(summary_params)
-        redirect_to @summary, notice: "Zusammenfassung erfolgreich aktualisiert."
+        redirect_to @summary, notice: "Summary successfully updated."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -57,7 +57,7 @@ class SummariesController < ApplicationController
     authorize @summary
     assignment = @summary.reading_assignment
     @summary.destroy
-    redirect_to reading_assignment_path(assignment), notice: "Zusammenfassung wurde gelöscht."
+    redirect_to reading_assignment_path(assignment), notice: "Summary was deleted."
   end
 
   private

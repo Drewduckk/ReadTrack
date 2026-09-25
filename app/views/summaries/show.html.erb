@@ -1,22 +1,22 @@
 <div class="mb-4">
-  <%= link_to "&larr; Zurück zum Leseauftrag".html_safe, reading_assignment_path(@summary.reading_assignment), class: "text-decoration-none" %>
+  <%= link_to "&larr; Back to reading assignment".html_safe, reading_assignment_path(@summary.reading_assignment), class: "text-decoration-none" %>
 </div>
 
 <div class="card shadow-sm mb-4">
   <div class="card-header bg-light d-flex justify-content-between align-items-center">
     <div>
-      <h3 class="mb-0">Zusammenfassung: <%= @summary.reading_assignment.book.title %></h3>
+      <h3 class="mb-0">Summary: <%= @summary.reading_assignment.book.title %></h3>
       <span class="text-muted">
-        Schüler/in: <strong><%= @summary.student.name %></strong> | 
-        Seiten <%= @summary.page_from %> bis <%= @summary.page_to %>
+        Student: <strong><%= @summary.student.name %></strong> |
+        Pages <%= @summary.page_from %> to <%= @summary.page_to %>
       </span>
     </div>
     <div class="d-flex gap-2">
       <% if policy(@summary).edit? %>
-        <%= link_to "Bearbeiten", edit_summary_path(@summary), class: "btn btn-outline-secondary btn-sm" %>
+        <%= link_to "Edit", edit_summary_path(@summary), class: "btn btn-outline-secondary btn-sm" %>
       <% end %>
       <% if policy(@summary).destroy? %>
-        <%= button_to "Löschen", summary_path(@summary), method: :delete, data: { turbo_confirm: "Wirklich löschen?" }, class: "btn btn-outline-danger btn-sm" %>
+        <%= button_to "Delete", summary_path(@summary), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this?" }, class: "btn btn-outline-danger btn-sm" %>
       <% end %>
     </div>
   </div>
@@ -26,6 +26,6 @@
     </div>
   </div>
   <div class="card-footer text-muted small">
-    Erstellt am <%= l(@summary.created_at, format: :long) rescue @summary.created_at.strftime("%d.%m.%Y um %H:%M") %> Uhr
+    Created on <%= l(@summary.created_at, format: :long) rescue @summary.created_at.strftime("%d.%m.%Y at %H:%M") %>
   </div>
 </div>

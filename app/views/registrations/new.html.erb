@@ -26,12 +26,12 @@
           <%= form.email_field :email_address, class: "form-control", autocomplete: "email" %>
         </div>
         <div class="rt-form-group">
-          <%= form.label :role, "Rolle", class: "form-label" %>
+          <%= form.label :role, "Role", class: "form-label" %>
           <%= form.select :role,
-              [["Schüler/in (Student)", "student"], ["Lehrperson (Teacher)", "teacher"]],
+              [["Student", "student"], ["Teacher", "teacher"]],
               {},
               class: "form-select" %>
-          <div class="rt-help">Wähle deine Rolle im System aus.</div>
+          <div class="rt-help">Choose your role in the system.</div>
         </div>
         <div class="rt-form-group">
           <%= form.label :password, class: "form-label" %>

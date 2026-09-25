@@ -39,7 +39,7 @@ class ReadingAssignmentsController < ApplicationController
 
     ReadingAssignment.transaction do
       if @reading_assignment.save
-        redirect_to @reading_assignment, notice: "Leseauftrag erfolgreich erstellt."
+        redirect_to @reading_assignment, notice: "Reading assignment successfully created."
       else
         render :new, status: :unprocessable_entity
       end
@@ -56,7 +56,7 @@ class ReadingAssignmentsController < ApplicationController
     ReadingAssignment.transaction do
       @reading_assignment.lock!
       if @reading_assignment.update(reading_assignment_params)
-        redirect_to @reading_assignment, notice: "Leseauftrag wurde aktualisiert (Freigegeben bis Seite #{@reading_assignment.released_until})."
+        redirect_to @reading_assignment, notice: "Reading assignment updated (released up to page #{@reading_assignment.released_until})."
       else
         render :edit, status: :unprocessable_entity
       end
@@ -66,7 +66,7 @@ class ReadingAssignmentsController < ApplicationController
   def destroy
     authorize @reading_assignment
     @reading_assignment.destroy
-    redirect_to reading_assignments_path, notice: "Leseauftrag wurde gelöscht."
+    redirect_to reading_assignments_path, notice: "Reading assignment was deleted."
   end
 
   private

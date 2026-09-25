@@ -36,8 +36,8 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     get dashboard_url
 
     assert_response :success
-    assert_includes response.body, "Seiten 1–5"
-    assert_not_includes response.body, "Seiten 1–9"
+    assert_includes response.body, "pages 1–5"
+    assert_not_includes response.body, "pages 1–9"
   end
 
   test "teacher only sees activity for their own reading assignments" do
@@ -48,7 +48,7 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     get dashboard_url
 
     assert_response :success
-    assert_includes response.body, "Seite 30"
-    assert_not_includes response.body, "Seite 99"
+    assert_includes response.body, "page 30"
+    assert_not_includes response.body, "page 99"
   end
 end

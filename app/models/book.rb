@@ -8,8 +8,8 @@ class Book < ApplicationRecord
   validates :content, presence: true
   validates :lines_per_page, numericality: { only_integer: true, greater_than: 0 }
 
-  # Teilt den Buchtext in echte Seiten auf (je lines_per_page Zeilen).
-  # Wird gecached, da der Text sich waehrend eines Requests nicht aendert.
+  # Splits the book text into real pages (lines_per_page lines each).
+  # Cached, since the text doesn't change during a request.
   def pages
     @pages ||= content.to_s.split("\n", -1).each_slice(lines_per_page).map { |lines| lines.join("\n") }
   end
@@ -18,8 +18,8 @@ class Book < ApplicationRecord
     pages.size
   end
 
-  # Text einer einzelnen Seite (1-indiziert). Ausserhalb des gueltigen
-  # Bereichs wird nil zurueckgegeben, statt einen Fehler zu werfen.
+  # Text of a single page (1-indexed). Returns nil outside the valid
+  # range instead of raising an error.
   def page(number)
     return nil if number.nil? || number < 1
 

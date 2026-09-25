@@ -37,7 +37,7 @@ class SummariesControllerTest < ActionDispatch::IntegrationTest
       }
     end
     assert_response :unprocessable_entity
-    assert_includes response.body, "kann nicht über den freigegebenen Bereich"
+    assert_includes response.body, "cannot exceed the released range"
   end
 
   test "student can update own summary" do

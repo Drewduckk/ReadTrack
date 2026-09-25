@@ -1,28 +1,28 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
-    <%= link_to "&larr; Zurück zum Auftrag".html_safe, reading_assignment_path(@reading_assignment), class: "text-decoration-none" %>
+    <%= link_to "&larr; Back to assignment".html_safe, reading_assignment_path(@reading_assignment), class: "text-decoration-none" %>
     <h2 class="mt-2 mb-0"><%= @reading_assignment.book.title %></h2>
-    <span class="text-muted">Autor: <%= @reading_assignment.book.author %></span>
+    <span class="text-muted">Author: <%= @reading_assignment.book.author %></span>
   </div>
   <div class="d-flex gap-2">
     <% if current_user.student? %>
-      <%= link_to "Zusammenfassung schreiben", new_reading_assignment_summary_path(@reading_assignment), class: "btn btn-success" %>
+      <%= link_to "Write summary", new_reading_assignment_summary_path(@reading_assignment), class: "btn btn-success" %>
     <% end %>
   </div>
 </div>
 
 <div class="alert alert-info d-flex justify-content-between align-items-center">
   <div>
-    <strong>Leseabschnitt:</strong> Dieser Text ist von der Lehrperson (<%= @reading_assignment.teacher.name %>) 
-    <strong>bis Seite <%= @reading_assignment.released_until %></strong> freigegeben.
+    <strong>Reading section:</strong> This text has been released by the teacher (<%= @reading_assignment.teacher.name %>)
+    <strong>up to page <%= @reading_assignment.released_until %></strong>.
   </div>
 
   <% if current_user.student? %>
     <div>
       <%= form_with(model: [@reading_assignment, @my_progress], url: reading_assignment_reading_progress_path(@reading_assignment), method: :post, class: "d-flex align-items-center gap-2") do |f| %>
-        <%= f.label :current_page, "Mein Lesestand (Seite):", class: "mb-0 small text-nowrap fw-bold" %>
+        <%= f.label :current_page, "My reading progress (page):", class: "mb-0 small text-nowrap fw-bold" %>
         <%= f.number_field :current_page, value: @my_progress.current_page, min: 0, max: @reading_assignment.released_until, class: "form-control form-control-sm", style: "width: 80px;" %>
-        <%= f.submit "Stand speichern", class: "btn btn-sm btn-outline-primary" %>
+        <%= f.submit "Save progress", class: "btn btn-sm btn-outline-primary" %>
       <% end %>
     </div>
   <% end %>
@@ -30,27 +30,27 @@
 
 <div class="card shadow-sm mb-4">
   <div class="card-header bg-light d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Seite <%= @current_page %> von <%= @book.page_count %></h5>
-    <span class="text-muted small">Freigegeben bis Seite <%= @max_visible_page %></span>
+    <h5 class="mb-0">Page <%= @current_page %> of <%= @book.page_count %></h5>
+    <span class="text-muted small">Released up to page <%= @max_visible_page %></span>
   </div>
   <div class="card-body p-4">
     <div class="reading-text p-3 bg-white rounded border" style="font-size: 1.15rem; line-height: 1.8; white-space: pre-wrap; min-height: 200px;">
-<%= @book.page(@current_page) || "Für diesen Leseauftrag ist noch keine Seite freigegeben." %>
+<%= @book.page(@current_page) || "No page has been released for this reading assignment yet." %>
     </div>
   </div>
   <div class="card-footer d-flex justify-content-between align-items-center">
     <% if @current_page > 1 %>
-      <%= link_to "&larr; Vorherige Seite".html_safe, read_reading_assignment_path(@reading_assignment, page: @current_page - 1), class: "btn btn-outline-secondary" %>
+      <%= link_to "&larr; Previous page".html_safe, read_reading_assignment_path(@reading_assignment, page: @current_page - 1), class: "btn btn-outline-secondary" %>
     <% else %>
       <span></span>
     <% end %>
 
     <% if @current_page < @max_visible_page %>
-      <%= link_to "Nächste Seite &rarr;".html_safe, read_reading_assignment_path(@reading_assignment, page: @current_page + 1), class: "btn btn-outline-primary" %>
+      <%= link_to "Next page &rarr;".html_safe, read_reading_assignment_path(@reading_assignment, page: @current_page + 1), class: "btn btn-outline-primary" %>
     <% elsif @max_visible_page < @book.page_count %>
-      <span class="text-muted small">Ab hier noch nicht freigegeben (Buch hat <%= @book.page_count %> Seiten)</span>
+      <span class="text-muted small">Not released beyond this point (book has <%= @book.page_count %> pages)</span>
     <% else %>
-      <span class="text-muted small">Letzte freigegebene Seite erreicht</span>
+      <span class="text-muted small">Last released page reached</span>
     <% end %>
   </div>
 </div>

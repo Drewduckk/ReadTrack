@@ -20,10 +20,10 @@ class DashboardController < ApplicationController
 
   private
 
-  # Jede Rolle sieht nur Aktivitaet, die sie auch ueber die jeweiligen
-  # Policies einsehen duerfte: Admin alles, Lehrperson nur zu eigenen
-  # Leseauftraegen (inkl. der Zusammenfassungen/Fortschritte ihrer
-  # Klasse), Schueler nur die eigenen Zusammenfassungen/Fortschritte.
+  # Each role only sees activity they'd be allowed to view via the
+  # respective policies: admin sees everything, teacher only activity for
+  # their own reading assignments (incl. summaries/progress of their
+  # class), student only their own summaries/progress.
   def scoped_activities
     return PaperTrail::Version.all if current_user.admin?
 
